@@ -70,4 +70,18 @@ resource "aws_eks_cluster" "tfgoat" {
     aws_iam_role_policy_attachment.tfgoat-cluster-AmazonEKSVPCResourceController,
     aws_iam_role_policy_attachment.tfgoat-cluster-AmazonEKSVPCResourceController,
   ]
+  encryption_config {           
+    provider {
+      key_arn = aws_kms_key.example.arn
+    }            
+    resources = [ "secrets" ]
+  }
 }
+
+# [Shisho]: See the following document:
+# https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key
+resource "aws_kms_key" "example" {
+  description             = "example"
+  deletion_window_in_days = 10
+}
+
